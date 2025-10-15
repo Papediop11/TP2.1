@@ -10,15 +10,20 @@ function handlePreFlightRequest(): Response {
 
 async function handler(_req: Request): Promise<Response> {
   if (_req.method == "OPTIONS") {
-    handlePreFlightRequest();
+    return handlePreFlightRequest();
   }
+
+  // 🟢 Extraction du mot depuis l'URL : ?word=...
+  const url = new URL(_req.url);
+  const userWord = url.searchParams.get("word") || "inconnu";
 
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
 
+  // 🟢 On utilise le mot de l'utilisateur pour la comparaison
   const similarityRequestBody = JSON.stringify({
     word1: "chien",
-    word2: "chien",
+    word2: userWord,
   });
 
   const requestOptions = {
